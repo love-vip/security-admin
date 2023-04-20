@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vip.admin.config.mapper.RbacDeptMapper">
+    <resultMap id="BaseResultMap" type="com.vip.admin.config.model.domain.RbacDept">
+        <id column="id" jdbcType="INTEGER" property="id" />
+    </resultMap>
+
+    <select id = "selectMembers" resultType = "com.vip.admin.config.model.vo.RbacMembersVo">
+        select t2.job_num jobNum, t2.realname, t2.enabled,
+        case when t4.dept_name is null
+             then t3.dept_name
+             else concat(t4.dept_name, '-', t3.dept_name)
+        end deptName,
+        t2.creator, t2.create_time createdTime, t2.last_operator lastOperator, t2.update_time updateTime
+        from rbac_mapping_dept_user t1
+        left join rbac_user t2
+        on t1.user_id = t2.id
+        left join rbac_dept t3
+        on t1.dept_id = t3.id
+        left join rbac_dept t4
+        on t3.pid = t4.id
+        where t1.dept_id = #{deptId,jdbcType=INTEGER}
+    </select>
+
+</mapper>

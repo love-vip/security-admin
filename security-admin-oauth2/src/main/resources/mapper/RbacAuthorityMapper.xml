@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vip.admin.oauth2.mapper.RbacAuthorityMapper">
+    <resultMap id="BaseResultMap" type="com.vip.admin.oauth2.model.domain.RbacAuthority">
+        <id column="id" jdbcType="INTEGER" property="id" />
+    </resultMap>
+
+    <select id="authorities" resultType="string">
+        select t3.authority_url
+        from rbac_user t1
+        left join rbac_mapping_user_authority t2
+        on t1.id = t2.user_id
+        left join rbac_authority t3
+        on t2.authority_id = t3.id
+        where t1.username = #{username,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

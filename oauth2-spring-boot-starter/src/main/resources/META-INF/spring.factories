@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    com.vip.admin.oauth2.resource.autoconfigure.Oauth2ResourceAutoConfiguration

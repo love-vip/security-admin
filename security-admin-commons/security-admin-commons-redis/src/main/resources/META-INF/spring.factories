@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    com.vip.admin.commons.redis.configuration.RedisConfiguration

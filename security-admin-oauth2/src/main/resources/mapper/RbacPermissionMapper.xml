@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vip.admin.oauth2.mapper.RbacPermissionMapper">
+    <resultMap id="BaseResultMap" type="com.vip.admin.oauth2.model.domain.RbacPermission">
+        <id column="id" jdbcType="INTEGER" property="id" />
+    </resultMap>
+
+    <select id="menus"  resultType="com.vip.admin.oauth2.model.vo.RbacPermissionVo">
+        select t3.system_name systemName, t4.id, t4.pid, t4.system, t4.perm_route permRoute, t4.perm_name permName, t4.perm_icon permIcon, t4.perm_type permType,
+               t4.creator, t4.create_time createdTime, t4.last_operator lastOperator, t4.update_time updateTime
+        from rbac_user t1
+        right join rbac_mapping_user_system t2
+        on t1.id = t2.user_id
+        right join rbac_system t3
+        on t2.system_id = t3.id
+        right join rbac_permisson t4
+        on t3.system = t4.system
+        where t1.username = #{username,jdbcType=VARCHAR}
+--         and t4.perm_type = 'MENU'
+    </select>
+
+</mapper>

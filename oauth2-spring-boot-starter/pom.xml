@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.vip</groupId>
+        <artifactId>security-admin-parent</artifactId>
+        <version>2.0.0.RELEASE</version>
+    </parent>
+
+    <artifactId>oauth2-spring-boot-starter</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.vip</groupId>
+            <artifactId>security-admin-oauth2-api</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vip</groupId>
+            <artifactId>security-admin-commons-base</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- Spring Oauth2 Resource -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Dubbo  -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-dubbo</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>
