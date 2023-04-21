@@ -1,7 +1,7 @@
 package com.vip.admin.oauth2.support.security.core;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.vip.admin.commons.core.utils.RedisKeyUtil;
 import com.vip.admin.commons.core.utils.WebUtils;
@@ -36,7 +36,7 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
 import org.springframework.util.Assert;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
@@ -173,7 +173,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
         HttpServletRequest request = WebUtils.getRequest().orElseThrow(
                 (Supplier<Throwable>) () -> new InternalAuthenticationServiceException("web request is empty"));
 
-        Map<String, String> paramMap = ServletUtil.getParamMap(request);
+        Map<String, String> paramMap = JakartaServletUtil.getParamMap(request);
         String grantType = paramMap.get(OAuth2ParameterNames.GRANT_TYPE);
         String clientId = paramMap.get(OAuth2ParameterNames.CLIENT_ID);
 

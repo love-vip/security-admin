@@ -9,11 +9,12 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring-boot.version>2.7.11</spring-boot.version>
-        <spring-cloud.version>2021.0.6</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-        <oauth2-authorization-server.version>0.4.1</oauth2-authorization-server.version>
+        <spring-boot.version>3.0.5</spring-boot.version>
+        <spring-cloud.version>2022.0.2</spring-cloud.version>
+        <spring-cloud-alibaba.version>2022.0.0.0-RC1</spring-cloud-alibaba.version>
+        <oauth2-authorization-server.version>1.0.1</oauth2-authorization-server.version>
 
+        <dubbo.version>3.2.0-beta.6</dubbo.version>
         <dubbo-serialization-kryo.version>2.7.9</dubbo-serialization-kryo.version>
 
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
@@ -27,7 +28,6 @@
         <nimbus.version>9.9.1</nimbus.version>
         <springdoc.version>1.7.0</springdoc.version>
         <persistence-api.version>2.2</persistence-api.version>
-        <servlet-api.version>4.0.1</servlet-api.version>
         <hutool.version>5.8.15</hutool.version>
         <commons.text.version>1.10.0</commons.text.version>
         <commons.io.version>2.11.0</commons.io.version>
@@ -60,6 +60,15 @@
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- apache dubbo -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-bom</artifactId>
+                <version>${dubbo.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -149,12 +158,6 @@
                 <version>${persistence-api.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
-            </dependency>
-
             <!-- hutool -->
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -208,8 +211,8 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>17</source>
+                        <target>17</target>
                         <showWarnings>true</showWarnings>
                     </configuration>
                     <version>3.8.1</version>

@@ -56,9 +56,9 @@ public class Oauth2ResourceAutoConfiguration {
         // 自定义处理token请求头鉴权失败的结果
         httpSecurity.oauth2ResourceServer().accessDeniedHandler(new Oauth2AccessDeniedHandler());
         //AJAX进行跨域请求时的预检,需要向另外一个域名的资源发送一个HTTP OPTIONS请求头,用以判断实际发送的请求是否安全
-        httpSecurity.authorizeHttpRequests().antMatchers(HttpMethod.OPTIONS).permitAll();
-        //白名单不拦截
-        httpSecurity.authorizeHttpRequests().antMatchers(ignoreUrlsConfig.getUrls()).permitAll();
+        httpSecurity.authorizeHttpRequests().requestMatchers(HttpMethod.OPTIONS).permitAll();
+        //白名单不拦截(老api「antMatchers()」)
+        httpSecurity.authorizeHttpRequests().requestMatchers(ignoreUrlsConfig.getUrls()).permitAll();
         /* 请求拦截鉴权处理 */
         httpSecurity.authorizeHttpRequests().anyRequest().access(new Oauth2AuthorizationManager());
         //跨域保护禁用

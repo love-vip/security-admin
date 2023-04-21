@@ -28,7 +28,7 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         //开放自定义的部分端点
-        httpSecurity.authorizeHttpRequests().antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/oauth2/*", "/token/*").permitAll();
+        httpSecurity.authorizeHttpRequests().requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/oauth2/*", "/token/*").permitAll();
         //其它任意接口都需认证
         httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
         //避免iframe同源无法登录 & 表单登录个性化
@@ -49,9 +49,9 @@ public class WebSecurityConfiguration {
     @Order(0)
     public SecurityFilterChain resources(HttpSecurity httpSecurity) throws Exception {
         //开放自定义的部分端点
-        httpSecurity.requestMatchers(configurer -> configurer.antMatchers("/actuator/**", "/css/**", "/error"));
+        httpSecurity.securityMatchers(configurer -> configurer.requestMatchers("/actuator/**", "/css/**", "/error"));
         //其它任意接口都需认证
-        httpSecurity.authorizeHttpRequests().anyRequest().permitAll();
+        httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
         //禁用部分不要的功能
         httpSecurity.requestCache().disable().securityContext().disable().sessionManagement().disable();
         return httpSecurity.build();

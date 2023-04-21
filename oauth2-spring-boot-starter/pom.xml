@@ -43,10 +43,11 @@
             <optional>true</optional>
         </dependency>
         <!-- Dubbo  -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-dubbo</artifactId>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-dubbo</artifactId>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
+        <!-- dubbo -->
     </dependencies>
 </project>

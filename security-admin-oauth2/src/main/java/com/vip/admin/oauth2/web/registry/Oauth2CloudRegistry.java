@@ -1,4 +1,4 @@
-package com.vip.admin.oauth2.web.registry;
+/*package com.vip.admin.oauth2.web.registry;
 
 import com.alibaba.cloud.dubbo.registry.event.ServiceInstancesChangedEvent;
 import com.vip.admin.oauth2.service.RbacAuthorityService;
@@ -7,7 +7,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.List;*/
 
 
 /**
@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1.0
  * @date 2023/4/17 13:55
  */
-@Component
+/*@Component
 @RequiredArgsConstructor
 public class Oauth2CloudRegistry implements ApplicationListener<ServiceInstancesChangedEvent> {
 
@@ -29,4 +29,4 @@ public class Oauth2CloudRegistry implements ApplicationListener<ServiceInstances
         serviceInstances.stream().reduce((first, second) -> second).ifPresent(authorityService::notifyRefreshAuthority);
     }
 
-}
+}*/
