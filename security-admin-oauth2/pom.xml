@@ -28,12 +28,6 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.vip</groupId>-->
-<!--            <artifactId>oauth2-spring-boot-starter</artifactId>-->
-<!--            <version>${project.parent.version}</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

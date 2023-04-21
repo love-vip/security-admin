@@ -1,6 +1,5 @@
 package com.vip.admin.oauth2.resource.autoconfigure;
 
-import com.vip.admin.oauth2.api.hystrix.Oauth2FeignHystrix;
 import com.vip.admin.oauth2.resource.handler.Oauth2AccessDeniedHandler;
 import com.vip.admin.oauth2.resource.handler.Oauth2AuthenticationEntryPoint;
 import com.vip.admin.oauth2.resource.manager.Oauth2AuthorizationManager;
@@ -33,7 +32,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@Import({IgnoreUrlsConfiguration.class, Oauth2FeignHystrix.class})
+@Import({IgnoreUrlsConfiguration.class})
 @ConditionalOnClass(OAuth2ResourceServerProperties.class)
 @AutoConfigureAfter({ IgnoreUrlsConfiguration.class, OAuth2ResourceServerAutoConfiguration.class })
 public class Oauth2ResourceAutoConfiguration {
@@ -64,6 +63,8 @@ public class Oauth2ResourceAutoConfiguration {
         httpSecurity.authorizeHttpRequests().anyRequest().access(new Oauth2AuthorizationManager());
         //跨域保护禁用
         httpSecurity.csrf().disable();
+        //跨域保护禁用
+        httpSecurity.cors().disable();
         return httpSecurity.build();
     }
 

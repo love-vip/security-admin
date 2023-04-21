@@ -1,0 +1,138 @@
+server:
+  port: 8002
+  servlet:
+    context-path: /${spring.application.name}
+
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 100000
+        readTimeout: 100000
+
+secure:
+  ignore:
+    urls:
+      - /token/*
+      - /css/**
+      - /error
+      - /v3/api-docs
+      - /v3/api-docs/**
+      - /swagger-ui.html
+      - /swagger-ui/**
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  packages-to-scan: com.vip.admin.config.web.controller
+  group-configs:
+    #分组名
+    - group: 部门相关接口
+      #按路径匹配
+      pathsToMatch: /auth/dept/**
+    #分组名
+    - group: 权限相关接口
+      #按路径匹配
+      pathsToMatch: /auth/perm/**
+    #分组名
+    - group: 系统相关接口
+      #按路径匹配
+      pathsToMatch: /auth/system/**
+    #分组名
+    - group: 用户相关接口
+      #按路径匹配
+      pathsToMatch: /auth/user/**
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          client-id: client
+          client-secret: secret
+          introspection-uri: http://localhost:8001/admin-oauth/oauth2/introspect
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos-test.vip.com:8848
+        namespace: c9c245b4-d275-465b-aa9b-7ee10655d14f
+        metadata:
+          context-path: ${server.servlet.context-path}
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-test.vip.com:3306/admin_oauth?setUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 300000
+      connection-test-query: SELECT 1
+
+  redis:
+    timeout: 5000
+    cluster:
+      max-redirects: 5
+      nodes:
+        - redis-test.vip.com:6379
+        - redis-test.vip.com:6380
+        - redis-test.vip.com:6381
+        - redis-test.vip.com:6382
+        - redis-test.vip.com:6383
+        - redis-test.vip.com:6384
+    database: 0
+    jedis:
+      pool:
+        max-active: 8 #连接池最大连接数（使用负值表示没有限制） 默认 8
+        max-idle: 8 #连接池中的最大空闲连接 默认 8
+        max-wait: -1 #连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        min-idle: 0 #连接池中的最小空闲连接 默认 0
+
+mybatis:
+  type-aliases-package: com.vip.admin.config.model.domain
+  mapper-locations: classpath:mapper/*.xml
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+  registry:
+    address: nacos://nacos-test.vip.com:8848
+  protocol:
+    name: dubbo
+    port: -1
+    serialization: kryo
+  cloud:
+    subscribed-services: admin-oauth
+  scan:
+    basePackages: com.vip.admin.config.web.rpc
+
+logging:
+  config: classpath:logback-spring.xml
