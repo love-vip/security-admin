@@ -17,7 +17,7 @@
         <dubbo.version>3.2.0-beta.6</dubbo.version>
         <dubbo-serialization-kryo.version>2.7.9</dubbo-serialization-kryo.version>
 
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <pagehelper.version>1.4.3</pagehelper.version>
         <alibaba-druid.version>1.1.14</alibaba-druid.version>
         <alibaba-easyexcel.version>3.1.1</alibaba-easyexcel.version>
