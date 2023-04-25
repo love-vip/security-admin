@@ -12,6 +12,7 @@ import com.vip.admin.commons.core.support.Objects;
 import com.vip.admin.commons.core.utils.JacksonUtil;
 import com.vip.admin.oauth2.mapper.RbacUserMapper;
 import com.vip.admin.oauth2.model.domain.RbacUser;
+import com.vip.admin.oauth2.model.dto.Oauth2LogoutDto;
 import com.vip.admin.oauth2.model.dto.Oauth2PasswordDto;
 import com.vip.admin.oauth2.model.vo.SignVo;
 import com.vip.admin.oauth2.service.RbacUserService;
@@ -20,6 +21,7 @@ import com.vip.admin.oauth2.support.exception.Oauth2BizException;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.core.env.Environment;
@@ -37,6 +39,7 @@ import java.util.Optional;
  * @title: RbacUserServiceImpl
  * @date 2022/03/22 15:49
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUserService {
@@ -53,12 +56,30 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
         ServiceInstance serviceInstance = loadBalancerClient.choose(clientId);
         String uri = serviceInstance.getUri().toString();
         String tokenUrl = uri + "/oauth2/token";
+        log.info("tokenUrl:{}, arguments:{}", tokenUrl, args);
         HttpResponse response = HttpRequest.post(tokenUrl).form(args).execute();
         if(response.isOk()){
             SignVo vo = JacksonUtil.parseJson(response.body(), SignVo.class);
             return WrapMapper.success(vo);
         }
         return JacksonUtil.parseJson(response.body(), Wrapper.class);
+    }
+
+    @Override
+    public Wrapper<Void> logout(Oauth2LogoutDto logoutDto) {
+        String clientId = environment.getProperty("spring.application.name");
+        ServiceInstance serviceInstance = loadBalancerClient.choose(clientId);
+        String uri = serviceInstance.getUri().toString();
+        Map<String, String> metadata = serviceInstance.getMetadata();
+        String tokenUrl = metadata.containsKey("context-path") ? uri + metadata.get("context-path") + "/oauth2/revoke" : uri + "/oauth2/revoke";
+        log.info("tokenUrl:{}, arguments:{}", tokenUrl, logoutDto.getToken());
+        HttpResponse response = HttpRequest.post(tokenUrl)
+                .basicAuth(logoutDto.getClient_id(), logoutDto.getClient_secret())
+                .form("token", logoutDto.getToken()).execute();
+        if(response.isOk()){
+            return WrapMapper.ok();
+        }
+        return WrapMapper.error();
     }
 
     @Override

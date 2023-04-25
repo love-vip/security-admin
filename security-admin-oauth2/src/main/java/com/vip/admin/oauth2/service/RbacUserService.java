@@ -3,6 +3,7 @@ package com.vip.admin.oauth2.service;
 import com.vip.admin.commons.base.wrapper.Wrapper;
 import com.vip.admin.commons.core.support.IService;
 import com.vip.admin.oauth2.model.domain.RbacUser;
+import com.vip.admin.oauth2.model.dto.Oauth2LogoutDto;
 import com.vip.admin.oauth2.model.dto.Oauth2PasswordDto;
 
 import java.util.Map;
@@ -21,6 +22,13 @@ public interface RbacUserService extends IService<RbacUser> {
      * @return token信息
      */
     Wrapper<?> sign(Map<String, Object> args);
+
+    /**
+     * 登出（销毁token）
+     * @param logoutDto 参数
+     * @return 成功或者失败
+     */
+    Wrapper<Void> logout(Oauth2LogoutDto logoutDto);
 
     /**
      * <p>修改密码</p>

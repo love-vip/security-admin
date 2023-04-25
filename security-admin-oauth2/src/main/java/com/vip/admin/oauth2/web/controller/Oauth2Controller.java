@@ -3,10 +3,7 @@ package com.vip.admin.oauth2.web.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.vip.admin.commons.base.wrapper.WrapMapper;
 import com.vip.admin.commons.base.wrapper.Wrapper;
-import com.vip.admin.oauth2.model.dto.Oauth2LoginDto;
-import com.vip.admin.oauth2.model.dto.Oauth2PasswordDto;
-import com.vip.admin.oauth2.model.dto.Oauth2SignDto;
-import com.vip.admin.oauth2.model.dto.Oauth2VerifyDto;
+import com.vip.admin.oauth2.model.dto.*;
 import com.vip.admin.oauth2.model.vo.SignVo;
 import com.vip.admin.oauth2.service.RbacUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -153,9 +150,23 @@ public class Oauth2Controller {
                             "}")})
             }
     )
-    public Wrapper<?> password(@RequestBody @Valid Oauth2PasswordDto passwordDto) {
+    public Wrapper<Void> password(@RequestBody @Valid Oauth2PasswordDto passwordDto) {
         userService.updatePassword(passwordDto);
         return WrapMapper.ok();
+    }
+
+    @PostMapping("logout")
+    @Operation(method = "POST", summary = "登出（销毁token）", description = "登出（销毁token）")
+    @ApiResponse(responseCode = "200", description = "success",
+            content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("{\n" +
+                            "    \"code\": \"200\",\n" +
+                            "    \"message\": \"成功!\",\n" +
+                            "}")})
+            }
+    )
+    public Wrapper<Void> logout(@RequestBody @Valid Oauth2LogoutDto logoutDto) {
+        return userService.logout(logoutDto);
     }
 
 }

@@ -43,7 +43,7 @@ public class AuthUserController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> save(@RequestBody @Valid RbacUserDto userDto) {
+    public Wrapper<Void> save(@RequestBody @Valid RbacUserDto userDto) {
         userService.save(userDto);
         return WrapMapper.ok();
     }
@@ -55,7 +55,7 @@ public class AuthUserController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> edit(@RequestBody @Valid RbacUserModifyDto userModifyDto) {
+    public Wrapper<Void> edit(@RequestBody @Valid RbacUserModifyDto userModifyDto) {
         userService.update(userModifyDto);
         return WrapMapper.ok();
     }
@@ -80,7 +80,7 @@ public class AuthUserController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = RbacUserVo.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> reset(@PathVariable("id") Long id) {
+    public Wrapper<Void> reset(@PathVariable("id") Long id) {
         userService.reset(id);
         return WrapMapper.ok();
     }
@@ -93,7 +93,7 @@ public class AuthUserController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = RbacUserVo.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> resign(@RequestBody Long[] ids) {
+    public Wrapper<Void> resign(@RequestBody Long[] ids) {
         userService.resign(ids);
         return WrapMapper.ok();
     }

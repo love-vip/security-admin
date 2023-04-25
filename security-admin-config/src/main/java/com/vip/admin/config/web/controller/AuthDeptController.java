@@ -44,7 +44,7 @@ public class AuthDeptController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> save(@RequestBody @Valid RbacDeptDto deptDto) {
+    public Wrapper<Void> save(@RequestBody @Valid RbacDeptDto deptDto) {
         deptService.save(deptDto);
         return WrapMapper.ok();
     }
@@ -56,7 +56,7 @@ public class AuthDeptController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> edit(@RequestBody @Valid RbacDeptModifyDto deptModifyDto) {
+    public Wrapper<Void> edit(@RequestBody @Valid RbacDeptModifyDto deptModifyDto) {
         deptService.update(deptModifyDto);
         return WrapMapper.ok();
     }

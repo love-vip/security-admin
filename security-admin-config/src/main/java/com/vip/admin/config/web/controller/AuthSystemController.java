@@ -43,7 +43,7 @@ public class AuthSystemController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> save(@RequestBody @Valid RbacSystemDto systemDto) {
+    public Wrapper<Void> save(@RequestBody @Valid RbacSystemDto systemDto) {
         systemService.save(systemDto);
         return WrapMapper.ok();
     }
@@ -55,7 +55,7 @@ public class AuthSystemController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> edit(@RequestBody @Valid RbacSystemModifyDto systemModifyDto) {
+    public Wrapper<Void> edit(@RequestBody @Valid RbacSystemModifyDto systemModifyDto) {
         systemService.update(systemModifyDto);
         return WrapMapper.ok();
     }
