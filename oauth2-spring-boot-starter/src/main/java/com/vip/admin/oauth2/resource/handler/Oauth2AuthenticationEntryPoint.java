@@ -1,14 +1,12 @@
 package com.vip.admin.oauth2.resource.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,7 +17,7 @@ public class Oauth2AuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        /*response.setStatus(HttpStatus.UNAUTHORIZED.value());*/
 
         // oauth2 认证失败导致的，还有一种可能是非oauth2认证失败导致的，比如没有传递token，但是访问受权限保护的方法
         if (exception instanceof OAuth2AuthenticationException) {
@@ -29,6 +27,11 @@ public class Oauth2AuthenticationEntryPoint implements AuthenticationEntryPoint 
         }
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON.toString());
-        response.getWriter().write("{\"status\":\"fail\",\"msg\":\"账号未认证\"}");
+        /* 解决跨域问题 */
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        response.getWriter().write("{\"code\":\"401\",\"message\":\"Unauthorized~认证失败\"}");
     }
 }

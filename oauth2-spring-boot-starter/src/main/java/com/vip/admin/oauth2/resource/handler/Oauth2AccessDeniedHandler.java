@@ -16,8 +16,14 @@ public class Oauth2AccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        /*response.setStatus(HttpStatus.FORBIDDEN.value());*/
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType(MediaType.APPLICATION_JSON.toString());
-        response.getWriter().write("{\"status\":\"fail\",\"msg\":\"无权限访问\"}");
+        /* 解决跨域问题 */
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        response.getWriter().write("{\"code\":\"403\",\"message\":\"Forbidden～鉴权失败\"}");
     }
 }
