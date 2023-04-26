@@ -25,10 +25,10 @@ public interface RbacUserService extends IService<RbacUser> {
 
     /**
      * 登出（销毁token）
-     * @param logoutDto 参数
+     * @param token 访问令牌
      * @return 成功或者失败
      */
-    Wrapper<Void> logout(Oauth2LogoutDto logoutDto);
+    Wrapper<Void> logout(String token);
 
     /**
      * <p>修改密码</p>

@@ -66,16 +66,16 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
     }
 
     @Override
-    public Wrapper<Void> logout(Oauth2LogoutDto logoutDto) {
+    public Wrapper<Void> logout(String token) {
         String clientId = environment.getProperty("spring.application.name");
         ServiceInstance serviceInstance = loadBalancerClient.choose(clientId);
         String uri = serviceInstance.getUri().toString();
         Map<String, String> metadata = serviceInstance.getMetadata();
         String tokenUrl = metadata.containsKey("context-path") ? uri + metadata.get("context-path") + "/oauth2/revoke" : uri + "/oauth2/revoke";
-        log.info("tokenUrl:{}, arguments:{}", tokenUrl, logoutDto.getToken());
+        log.info("tokenUrl:{}, arguments:{}", tokenUrl, token);
         HttpResponse response = HttpRequest.post(tokenUrl)
-                .basicAuth(logoutDto.getClient_id(), logoutDto.getClient_secret())
-                .form("token", logoutDto.getToken()).execute();
+                .basicAuth("client", "secret")
+                .form("token", token).execute();
         if(response.isOk()){
             return WrapMapper.ok();
         }

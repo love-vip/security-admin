@@ -7,6 +7,8 @@ import com.vip.admin.oauth2.model.dto.*;
 import com.vip.admin.oauth2.model.vo.SignVo;
 import com.vip.admin.oauth2.service.RbacUserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -155,18 +157,19 @@ public class Oauth2Controller {
         return WrapMapper.ok();
     }
 
-    @PostMapping("logout")
-    @Operation(method = "POST", summary = "登出（销毁token）", description = "登出（销毁token）")
+    @GetMapping("logout")
+    @Operation(method = "GET", summary = "登出（销毁token）", description = "登出（销毁token）")
+    @Parameter(name = "Authorization", description = "令牌", required = true, example = "NM1FE8E2", in = ParameterIn.HEADER)
     @ApiResponse(responseCode = "200", description = "success",
             content = {
-                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("{\n" +
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = BaseResponse.class), examples = {@ExampleObject("{\n" +
                             "    \"code\": \"200\",\n" +
                             "    \"message\": \"成功!\",\n" +
                             "}")})
             }
     )
-    public Wrapper<Void> logout(@RequestBody @Valid Oauth2LogoutDto logoutDto) {
-        return userService.logout(logoutDto);
+    public Wrapper<Void> logout(@RequestHeader("Authorization") String token) {
+        return userService.logout(token);
     }
 
 }
