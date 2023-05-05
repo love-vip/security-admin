@@ -33,6 +33,12 @@ public class BaseEntity implements Serializable {
     private String creator;
 
     /**
+     * 创建人id
+     */
+    @TableField(value = "creator_id", fill = FieldFill.INSERT)
+    private Long creatorId;
+
+    /**
      * 创建时间
      */
     @TableField(value = "create_time", fill = FieldFill.INSERT)
@@ -45,6 +51,12 @@ public class BaseEntity implements Serializable {
      */
     @TableField(value = "last_operator", fill = FieldFill.UPDATE)
     private String lastOperator;
+
+    /**
+     * 最近操作人id
+     */
+    @TableField(value = "last_operator_id", fill = FieldFill.UPDATE)
+    private Long lastOperatorId;
 
     /**
      * 更新时间

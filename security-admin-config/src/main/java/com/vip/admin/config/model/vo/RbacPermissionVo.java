@@ -56,4 +56,10 @@ public class RbacPermissionVo extends BaseVo {
      */
     @Schema(name = "permType", title = "权限类型", example = "MENU")
     private String permType;
+
+    /**
+     * 是否选中（有无权限）
+     */
+    @Schema(name = "checked", title = "是否选中（有无权限）", example = "true")
+    private boolean checked;
 }

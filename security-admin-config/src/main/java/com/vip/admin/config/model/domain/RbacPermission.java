@@ -53,4 +53,10 @@ public class RbacPermission extends BaseEntity {
      */
     @TableField(value = "perm_type")
     private String permType;
+
+    /**
+     * 资源id
+     */
+    @TableField(value = "authority_id")
+    private Long authorityId;
 }

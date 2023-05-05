@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.ibatis.type.Alias;
 
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 /**
  * @author echo
@@ -90,5 +91,17 @@ public class RbacUser extends BaseEntity {
      */
     @TableField(value = "verify_error_times")
     private Integer verifyErrorTimes;
+
+    /**
+     * 访问令牌
+     */
+    @TableField(value = "access_token")
+    private String accessToken;
+
+    /**
+     * 令牌过期时间
+     */
+    @TableField(value = "expire_time")
+    private LocalDateTime expireTime;
 
 }

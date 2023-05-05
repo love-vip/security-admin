@@ -6,17 +6,21 @@
     </resultMap>
 
     <select id="menus" resultType="com.vip.admin.config.model.vo.RbacPermissionVo">
-        select t3.system_name systemName, t4.id, t4.pid, t4.system, t4.perm_route permRoute, t4.perm_name permName, t4.perm_icon permIcon, t4.perm_type permType,
-               t4.creator, t4.create_time createdTime, t4.last_operator lastOperator, t4.update_time updateTime
-        from rbac_user t1
-        right join rbac_mapping_user_system t2
-        on t1.id = t2.user_id
-        right join rbac_system t3
-        on t2.system_id = t3.id
-        right join rbac_permisson t4
-        on t3.system = t4.system
+        SELECT
+        t3.id, t3.pid, t2.user_id, !ISNULL(t2.user_id) checked,
+        t3.system, t4.system_name systemName,
+        t3.perm_route permRoute, t3.perm_name permName,
+        t3.perm_icon permIcon, t3.perm_type permType,
+        t3.creator, t3.create_time createTime,
+        t3.last_operator lastOperator, t3.update_time updateTime
+        FROM rbac_permission t3
+        LEFT JOIN rbac_system t4 ON t3.system = t4.system
+        LEFT JOIN rbac_mapping_user_permission t2 ON t3.id = t2.perm_id
+        LEFT JOIN rbac_user t1 ON (t1.id = t2.user_id OR t2.user_id is null)
         where t1.username = #{username,jdbcType=VARCHAR}
---         and t4.perm_type = 'MENU'
+        <if test="system != null">
+            and t3.system = #{system, jdbcType=VARCHAR}
+        </if>
     </select>
 
 </mapper>

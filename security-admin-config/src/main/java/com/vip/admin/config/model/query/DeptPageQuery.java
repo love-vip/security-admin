@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * @author echo
@@ -24,13 +24,13 @@ public class DeptPageQuery extends BaseQuery {
     @Schema(name = "level", title = "部门分级", example = "1", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer level;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Schema(name = "beginTime", title = "开始时间", example = "2023-05-21 00:00:00", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private LocalDateTime beginTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @Schema(name = "beginTime", title = "开始时间", example = "2023-05-21", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private LocalDate beginTime;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Schema(name = "beginTime", title = "开始时间", example = "2023-05-21 00:00:00", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private LocalDateTime endTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @Schema(name = "beginTime", title = "结束时间", example = "2023-05-21", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private LocalDate endTime;
 }

@@ -162,7 +162,7 @@ public class Oauth2Controller {
     @Parameter(name = "Authorization", description = "令牌", required = true, example = "NM1FE8E2", in = ParameterIn.HEADER)
     @ApiResponse(responseCode = "200", description = "success",
             content = {
-                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = BaseResponse.class), examples = {@ExampleObject("{\n" +
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = Wrapper.class), examples = {@ExampleObject("{\n" +
                             "    \"code\": \"200\",\n" +
                             "    \"message\": \"成功!\",\n" +
                             "}")})

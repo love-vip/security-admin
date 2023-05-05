@@ -1,10 +1,9 @@
-package com.vip.admin.commons.core.config;
+package com.vip.admin.oauth2.support.mybatis;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.vip.admin.commons.core.utils.SecurityUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,14 +34,13 @@ public class MybatisPlusConfiguration {
 
         @Override
         public void insertFill(MetaObject metaObject) {
-            this.setFieldValByName("creator", SecurityUtils.getUser().getName(), metaObject);
+            this.setFieldValByName("creator", "admin", metaObject);
+            this.setFieldValByName("creatorId", 0L, metaObject);
             this.setFieldValByName("createTime", LocalDateTime.now(), metaObject);
         }
 
         @Override
         public void updateFill(MetaObject metaObject) {
-            this.setFieldValByName("lastOperator", SecurityUtils.getUser().getName(), metaObject);
-            this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.vip.admin.config.configurer;
+package com.vip.admin.config.assist.configurer;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;

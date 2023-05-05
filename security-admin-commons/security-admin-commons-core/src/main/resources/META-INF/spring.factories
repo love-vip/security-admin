@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    com.vip.admin.commons.core.config.AsyncConfiguration,\
-    com.vip.admin.commons.core.config.MybatisPlusConfiguration
+    com.vip.admin.commons.core.config.AsyncConfiguration

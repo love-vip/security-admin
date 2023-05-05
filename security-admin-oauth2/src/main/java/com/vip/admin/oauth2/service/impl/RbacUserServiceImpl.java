@@ -12,7 +12,6 @@ import com.vip.admin.commons.core.support.Objects;
 import com.vip.admin.commons.core.utils.JacksonUtil;
 import com.vip.admin.oauth2.mapper.RbacUserMapper;
 import com.vip.admin.oauth2.model.domain.RbacUser;
-import com.vip.admin.oauth2.model.dto.Oauth2LogoutDto;
 import com.vip.admin.oauth2.model.dto.Oauth2PasswordDto;
 import com.vip.admin.oauth2.model.vo.SignVo;
 import com.vip.admin.oauth2.service.RbacUserService;
@@ -31,8 +30,12 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author echo
@@ -99,6 +102,14 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
     }
 
     @Override
+    public void updateAccessToken(String username, String accessToken, LocalDateTime expireTime) {
+        RbacUser rbacUser = getByUsername(username).orElseThrow(() -> new Oauth2BizException(Oauth2ApiCode.CN10001));
+        rbacUser.setAccessToken(accessToken);
+        rbacUser.setExpireTime(expireTime);
+        rbacUserMapper.updateById(rbacUser);
+    }
+
+    @Override
     public Optional<RbacUser> getByUsername(String username) {
         return Optional.ofNullable(rbacUserMapper.selectOne(new QueryWrapper<RbacUser>().eq("username", username)));
     }
@@ -106,6 +117,17 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
     @Override
     public Optional<RbacUser> getByMobile(String mobile) {
         return Optional.ofNullable(rbacUserMapper.selectOne(new QueryWrapper<RbacUser>().eq("mobile", mobile)));
+    }
+
+    @Override
+    public Optional<RbacUser> selectByPrimaryKey(Long id) {
+        return Optional.ofNullable(rbacUserMapper.selectById(id));
+    }
+
+    @Override
+    public Optional<List<RbacUser>> selectByPrimaryKey(Long[] ids) {
+        List<RbacUser> users = Arrays.stream(ids).map(rbacUserMapper::selectById).collect(Collectors.toList());
+        return Optional.of(users);
     }
 
     @Override

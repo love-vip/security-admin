@@ -6,6 +6,8 @@ import com.vip.admin.oauth2.model.domain.RbacUser;
 import com.vip.admin.oauth2.model.dto.Oauth2LogoutDto;
 import com.vip.admin.oauth2.model.dto.Oauth2PasswordDto;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,6 +46,14 @@ public interface RbacUserService extends IService<RbacUser> {
     void updatePassword(String username, String password);
 
     /**
+     * <p>用户登录成功设置最新访问令牌</p>
+     * @param username 用户名
+     * @param accessToken 用户令牌
+     * @param expireTime 过期时间
+     */
+    void updateAccessToken(String username, String accessToken, LocalDateTime expireTime);
+
+    /**
      * <p>根据唯一用户名获取用户信息</p>
      * @param username 用户名
      * @return 用户
@@ -56,6 +66,20 @@ public interface RbacUserService extends IService<RbacUser> {
      * @return 用户
      */
     Optional<RbacUser> getByMobile(String mobile);
+
+    /**
+     * <p>根据主键id获取用户信息</p>
+     * @param id 主键id
+     * @return 用户
+     */
+    Optional<RbacUser> selectByPrimaryKey(Long id);
+
+    /**
+     * <p>根据主键id获取用户信息</p>
+     * @param ids 主键ids
+     * @return 用户
+     */
+    Optional<List<RbacUser>> selectByPrimaryKey(Long[] ids);
 
     /**
      * <p>锁定账户</p>
