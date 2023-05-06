@@ -102,7 +102,8 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
         if (StrUtil.equals(SecurityConstants.SMS.getValue(), grantType)) {
             String code = authentication.getCredentials().toString();
-            if(!StrUtil.equals(code, "123456")){
+            //TODO 短信登录暂时保留，后续有需要可接入
+            if(!StrUtil.equals(code, "RtLM16K")){
                 this.logger.debug("Failed to authenticate since code does not match stored value");
                 throw new BadCaptchaException(
                         this.messages.getMessage(
@@ -127,7 +128,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
                 Long errorTimes = redisHandler.getStringRedisTemplate().opsForValue().increment(compositeKey);
                 //如果连续第4次输入错误验证码则锁定账户
                 if(Objects.requireNonNull(errorTimes).intValue() > ALLOW_VERIFY_ERROR_TIMES){
-                    userService.locked(authentication.getPrincipal().toString());
+                    userService.locked(username, compositeKey);
                 }
                 this.logger.debug("Failed to authenticate since code does not match stored value");
                 throw new BadCaptchaException(
@@ -137,21 +138,24 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
                         )
                 );
             }
-            //正确验证，清除验证错误次数
-            redisHandler.getStringRedisTemplate().delete(compositeKey);
+            //正确验证，解锁
+            userService.unlock(authentication.getPrincipal().toString(), compositeKey);
+            //如果还未设置绑定谷歌校验器，则设置绑定
+            userService.bind(username);
         }
 
         if (StrUtil.equals(AuthorizationGrantType.PASSWORD.getValue(), grantType)) {
+            String username = userDetails.getUsername();
             String presentedPassword = authentication.getCredentials().toString();
             String encodedPassword = extractEncodedPassword(userDetails.getPassword());
             RedisHandler redisHandler = SpringUtil.getBean(RedisHandler.class);
+            RbacUserService userService = SpringUtil.getBean(RbacUserService.class);
             String compositeKey = RedisKeyUtil.getOauth2LoginErrorTimes(authentication.getName(), authentication.getPrincipal().toString());
             if (!this.passwordEncoder.matches(presentedPassword, encodedPassword)) {
                 Long errorTimes = redisHandler.getStringRedisTemplate().opsForValue().increment(compositeKey);
                 //如果连续第6次输入错误密码则锁定账户
                 if(Objects.requireNonNull(errorTimes).intValue() > ALLOW_LOGIN_ERROR_TIMES){
-                    RbacUserService rbacUserService = SpringUtil.getBean(RbacUserService.class);
-                    rbacUserService.locked(authentication.getPrincipal().toString());
+                    userService.locked(username, compositeKey);
                 }
                 this.logger.debug("Failed to authenticate since password does not match stored value");
                 throw new BadCredentialsException(
@@ -161,8 +165,8 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
                         )
                 );
             }
-            //正确登录，清除登录错误次数
-            redisHandler.getStringRedisTemplate().delete(compositeKey);
+            //正确登录，解锁
+            userService.unlock(authentication.getPrincipal().toString(), compositeKey);
         }
     }
 

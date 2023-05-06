@@ -84,14 +84,22 @@ public interface RbacUserService extends IService<RbacUser> {
     /**
      * <p>锁定账户</p>
      * @param username 用户名
+     * @param compositeKey 记录错误次数key
      */
-    void locked(String username);
+    void locked(String username, String compositeKey);
 
     /**
      * <p>解锁账户</p>
      * @param username 用户名
+     * @param compositeKey 记录错误次数key
      */
-    void unlock(String username);
+    void unlock(String username, String compositeKey);
+
+    /**
+     * <p>绑定谷歌校验</p>
+     * @param username 用户名
+     */
+    void bind(String username);
 
     /**
      * <p>保存密钥</p>

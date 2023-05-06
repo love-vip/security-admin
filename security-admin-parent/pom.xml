@@ -17,10 +17,9 @@
         <dubbo-serialization-kryo.version>2.7.9</dubbo-serialization-kryo.version>
 
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <pagehelper.version>1.4.3</pagehelper.version>
         <alibaba-druid.version>1.1.14</alibaba-druid.version>
         <alibaba-easyexcel.version>3.1.1</alibaba-easyexcel.version>
-        <redisson.version>3.11.3</redisson.version>
+        <redisson.version>3.17.6</redisson.version>
         <google-guava.version>31.1-jre</google-guava.version>
         <okhttp3.version>4.9.3</okhttp3.version>
         <modelmapper.version>2.3.3</modelmapper.version>
@@ -77,6 +76,13 @@
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-serialization-kryo</artifactId>
                 <version>${dubbo-serialization-kryo.version}</version>
+            </dependency>
+
+            <!-- redisson -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
 
             <!-- Okhttp3  -->

@@ -1,15 +1,17 @@
 package com.vip.admin.oauth2.service.impl;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.Pair;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.vip.admin.commons.base.enums.BooleanEnum;
 import com.vip.admin.commons.base.wrapper.WrapMapper;
 import com.vip.admin.commons.base.wrapper.Wrapper;
 import com.vip.admin.commons.core.support.BaseService;
 import com.vip.admin.commons.core.support.Objects;
 import com.vip.admin.commons.core.utils.JacksonUtil;
+import com.vip.admin.commons.redis.handler.RedisHandler;
 import com.vip.admin.oauth2.mapper.RbacUserMapper;
 import com.vip.admin.oauth2.model.domain.RbacUser;
 import com.vip.admin.oauth2.model.dto.Oauth2PasswordDto;
@@ -21,6 +23,10 @@ import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBlockingQueue;
+import org.redisson.api.RDelayedQueue;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.core.env.Environment;
@@ -35,6 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +54,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUserService {
 
+    @Value("${admin.oauth.unlock-delay-seconds:3600}")
+    private Integer unlockDelaySeconds;
     private final Environment environment;
+    private final RedisHandler redisHandler;
+    private final RedissonClient redissonClient;
     private final RbacUserMapper rbacUserMapper;
     private final PasswordEncoder passwordEncoder;
     private final LoadBalancerClient loadBalancerClient;
@@ -131,23 +142,38 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
     }
 
     @Override
-    public void locked(String username) {
+    public void locked(String username, String compositeKey) {
         RbacUser rbacUser = getByUsername(username).orElseThrow(() -> new Oauth2BizException(Oauth2ApiCode.CN10001));
-        rbacUser.setAccountNonLocked(BooleanEnum.NEGATIVE.isBool());
+        rbacUser.setAccountNonLocked(false);
         rbacUserMapper.updateById(rbacUser);
+        RBlockingQueue<Pair<String, String>> lockedQueue = redissonClient.getBlockingQueue("user_locked_queue");
+        RDelayedQueue<Pair<String, String>> delayedQueue = redissonClient.getDelayedQueue(lockedQueue);
+        // 1小时后以后将消息发送到指定队列
+        Pair<String, String> pair = new Pair<>( rbacUser.getUsername(), compositeKey);
+        delayedQueue.offer(pair, unlockDelaySeconds, TimeUnit.SECONDS);
     }
 
     @Override
-    public void unlock(String username) {
+    public void unlock(String username, String compositeKey) {
         RbacUser rbacUser = getByUsername(username).orElseThrow(() -> new Oauth2BizException(Oauth2ApiCode.CN10001));
-        rbacUser.setAccountNonLocked(BooleanEnum.POSITIVE.isBool());
+        rbacUser.setAccountNonLocked(Boolean.TRUE);
         rbacUserMapper.updateById(rbacUser);
+        redisHandler.getStringRedisTemplate().delete(compositeKey);
+    }
+
+    @Override
+    public void bind(String username) {
+        RbacUser rbacUser = getByUsername(username).orElseThrow(() -> new Oauth2BizException(Oauth2ApiCode.CN10001));
+        if(! rbacUser.isBind()){
+            rbacUser.setBind(Boolean.TRUE);
+            rbacUserMapper.updateById(rbacUser);
+        }
     }
 
     @Override
     public String fillSecret(String username) {
         RbacUser rbacUser = getByUsername(username).orElseThrow(() -> new Oauth2BizException(Oauth2ApiCode.CN10001));
-        if(Objects.isNotEmpty(rbacUser.getSecret())){
+        if(StrUtil.isNotEmpty(rbacUser.getSecret())){
             return rbacUser.getSecret();
         }
         //从未绑定过谷歌校验器
@@ -155,10 +181,8 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
         GoogleAuthenticatorKey googleAuthenticatorKey = googleAuthenticator.createCredentials();
         String secret = googleAuthenticatorKey.getKey();
         rbacUser.setSecret(secret);
-//        user.setBind(BooleanEnum.POSITIVE.isBool());
         rbacUserMapper.updateById(rbacUser);
         return secret;
-
     }
 
 }
