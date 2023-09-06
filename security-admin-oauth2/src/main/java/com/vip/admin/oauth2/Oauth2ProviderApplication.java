@@ -14,6 +14,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
+ * @see com.alibaba.cloud.dubbo.registry.SpringCloudRegistryFactory
  * <p>授权服务中心启动类</p>
  * @author echo
  * @title: Oauth2ProviderApplication

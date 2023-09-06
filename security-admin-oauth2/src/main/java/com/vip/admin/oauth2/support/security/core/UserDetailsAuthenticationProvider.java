@@ -139,7 +139,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
                 );
             }
             //正确验证，解锁
-            userService.unlock(authentication.getPrincipal().toString(), compositeKey);
+            userService.unlock(username, compositeKey);
             //如果还未设置绑定谷歌校验器，则设置绑定
             userService.bind(username);
         }
@@ -166,7 +166,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
                 );
             }
             //正确登录，解锁
-            userService.unlock(authentication.getPrincipal().toString(), compositeKey);
+            userService.unlock(username, compositeKey);
         }
     }
 

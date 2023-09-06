@@ -5,23 +5,37 @@ import com.vip.admin.oauth2.resource.handler.Oauth2AuthenticationEntryPoint;
 import com.vip.admin.oauth2.resource.manager.Oauth2AuthorizationManager;
 import com.vip.admin.oauth2.resource.autoconfigure.IgnoreUrlsConfiguration.IgnoreUrlsConfig;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.introspection.NimbusOpaqueTokenIntrospector;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * @author echo
@@ -48,9 +62,10 @@ public class Oauth2ResourceAutoConfiguration {
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain resources(HttpSecurity httpSecurity ) throws Exception {
+    public SecurityFilterChain resources(HttpSecurity httpSecurity, OpaqueTokenIntrospector introspector ) throws Exception {
         // opaque处理
-        httpSecurity.oauth2ResourceServer().opaqueToken();
+        /*httpSecurity.oauth2ResourceServer().opaqueToken();*/
+        httpSecurity.oauth2ResourceServer().opaqueToken(opaqueTokenConfigurer -> opaqueTokenConfigurer.introspector(introspector));
         // 自定义处理token请求头过期或签名错误的结果
         httpSecurity.oauth2ResourceServer().authenticationEntryPoint(new Oauth2AuthenticationEntryPoint());
         // 自定义处理token请求头鉴权失败的结果
@@ -80,6 +95,21 @@ public class Oauth2ResourceAutoConfiguration {
         // 是否可以从uri请求参数中获取token
         bearerTokenResolver.setAllowUriQueryParameter(false);
         return bearerTokenResolver;
+    }
+
+    @Bean
+    @Primary
+    @SneakyThrows
+    public OpaqueTokenIntrospector introspector(OAuth2ResourceServerProperties properties) {
+        SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, (chain, authType) -> true).build();
+        SSLConnectionSocketFactory ssl = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(ssl).build();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setHttpClient(httpClient);
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .basicAuthentication(properties.getOpaquetoken().getClientId(), properties.getOpaquetoken().getClientSecret())
+                .requestFactory(() -> requestFactory).build();
+        return new NimbusOpaqueTokenIntrospector(properties.getOpaquetoken().getIntrospectionUri(), restTemplate);
     }
 
 }

@@ -90,20 +90,6 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
     }
 
     @Override
-    public void locked(String username) {
-        RbacUser rbacUser = getByUsername(username).orElseThrow(() -> new ConfigBizException(ConfigApiCode.CN10001));
-        rbacUser.setAccountNonLocked(BooleanEnum.NEGATIVE.isBool());
-        rbacUserMapper.updateById(rbacUser);
-    }
-
-    @Override
-    public void unlock(String username) {
-        RbacUser rbacUser = getByUsername(username).orElseThrow(() -> new ConfigBizException(ConfigApiCode.CN10001));
-        rbacUser.setAccountNonLocked(BooleanEnum.POSITIVE.isBool());
-        rbacUserMapper.updateById(rbacUser);
-    }
-
-    @Override
     public IPage<RbacUserVo> selectByPage(UserPageQuery query) {
 
         Page<RbacUser> page = new Page<>(query.getPageNum(), query.getPageSize());
@@ -121,7 +107,7 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
     public void reset(Long id) {
         RbacUser rbacUser = rbacUserMapper.selectById(id);
         rbacUser.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
-        rbacUser.setInitial(BooleanEnum.POSITIVE.isBool());
+        rbacUser.setInitial(Boolean.TRUE);
         rbacUserMapper.updateById(rbacUser);
         if(rbacUser.getAccessToken() != null && rbacUser.getExpireTime()!= null && rbacUser.getExpireTime().isAfter(LocalDateTime.now())){
             Wrapper<Void> wrapper = authorizationDubboService.expire(new AccessTokenRequest(rbacUser.getAccessToken()));

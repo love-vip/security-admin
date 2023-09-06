@@ -46,18 +46,6 @@ public interface RbacUserService extends IService<RbacUser> {
     void update(RbacUserModifyDto userModifyDto);
 
     /**
-     * <p>锁定账户</p>
-     * @param username 用户名
-     */
-    void locked(String username);
-
-    /**
-     * <p>解锁账户</p>
-     * @param username 用户名
-     */
-    void unlock(String username);
-
-    /**
      * <p>分页查询</p>
      * @param query 查询条件
      * @return 分页数据
