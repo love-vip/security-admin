@@ -37,12 +37,6 @@ public class RbacUser extends BaseEntity {
     private String realName;
 
     /**
-     * 工号
-     */
-    @TableField(value = "job_num")
-    private String jobNum;
-
-    /**
      * 手机号
      */
     private String mobile;

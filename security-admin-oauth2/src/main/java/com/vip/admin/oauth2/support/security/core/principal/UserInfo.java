@@ -21,12 +21,6 @@ public class UserInfo implements Serializable {
     private Long id;
 
     /**
-     * 工号
-     */
-    @Schema(name = "jobNum", description = "工号", example = "10086")
-    private String jobNum;
-
-    /**
      * 手机号
      */
     @Schema(name = "mobile", description = "手机号", example = "13812348888")

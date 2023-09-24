@@ -17,9 +17,6 @@ import jakarta.validation.constraints.NotBlank;
 @Schema(title = "RbacMembersVo", description = "部门人员实体响应对象")
 public class RbacMembersVo extends BaseVo {
 
-    @Schema(name = "jobNum", description = "工号", example = "123")
-    private String jobNum;
-
     @Schema(name = "realName", description = "真实姓名", example = "七七")
     private String realName;
 

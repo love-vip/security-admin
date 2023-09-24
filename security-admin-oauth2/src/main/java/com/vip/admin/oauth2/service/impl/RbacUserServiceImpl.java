@@ -52,7 +52,8 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
         String clientId = environment.getProperty("spring.application.name");
         ServiceInstance serviceInstance = loadBalancerClient.choose(clientId);
         String uri = serviceInstance.getUri().toString();
-        String tokenUrl = uri + "/oauth2/token";
+        Map<String, String> metadata = serviceInstance.getMetadata();
+        String tokenUrl = metadata.containsKey("context-path") ? uri + metadata.get("context-path") + "/oauth2/token" : uri + "/oauth2/token";
         HttpResponse response = HttpRequest.post(tokenUrl).form(args).execute();
         if(response.isOk()){
             SignVo vo = JacksonUtil.parseJson(response.body(), SignVo.class);

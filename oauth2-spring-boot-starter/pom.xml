@@ -42,6 +42,10 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
         <!-- Dubbo  -->
 <!--        <dependency>-->
 <!--            <groupId>com.alibaba.cloud</groupId>-->

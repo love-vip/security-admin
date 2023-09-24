@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,8 +35,8 @@ public class AuthPermController {
                     @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = RbacPermissionVo.class), examples = {@ExampleObject("")})
             }
     )
-    public Wrapper<?> menus(Authentication authentication) {
-        List<RbacPermissionVo> menus =  permissionService.query(authentication);
+    public Wrapper<?> menus() {
+        List<RbacPermissionVo> menus =  permissionService.query();
         return WrapMapper.success(menus);
     }
 

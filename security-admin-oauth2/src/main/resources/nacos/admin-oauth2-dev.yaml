@@ -29,15 +29,14 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: nacos-test.vip.com:8848
-        namespace: c9c245b4-d275-465b-aa9b-7ee10655d14f
+        server-addr: 127.0.0.1:8848
         metadata:
           context-path: ${server.servlet.context-path}
 
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-test.vip.com:3306/admin_oauth?setUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/admin_oauth2?setUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     hikari:
@@ -50,24 +49,19 @@ spring:
       connection-timeout: 300000
       connection-test-query: SELECT 1
 
-  redis:
-    timeout: 5000
-    cluster:
-      max-redirects: 5
-      nodes:
-        - redis-test.vip.com:6379
-        - redis-test.vip.com:6380
-        - redis-test.vip.com:6381
-        - redis-test.vip.com:6382
-        - redis-test.vip.com:6383
-        - redis-test.vip.com:6384
-    database: 0
-    jedis:
-      pool:
-        max-active: 8 #连接池最大连接数（使用负值表示没有限制） 默认 8
-        max-idle: 8 #连接池中的最大空闲连接 默认 8
-        max-wait: -1 #连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
-        min-idle: 0 #连接池中的最小空闲连接 默认 0
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: passw0rd
+      timeOut: 6000
+      database: 1
+      lettuce:
+        pool:
+          max-active: 8 #连接池最大连接数（使用负值表示没有限制） 默认 8
+          max-idle: 8 #连接池中的最大空闲连接 默认 8
+          max-wait: -1 #连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+          min-idle: 0 #连接池中的最小空闲连接 默认 0
 
 mybatis:
   type-aliases-package: com.vip.admin.oauth.model.domain
@@ -89,7 +83,7 @@ dubbo:
   application:
     name: ${spring.application.name}
   registry:
-    address: nacos://nacos-test.vip.com:8848
+    address: nacos://127.0.0.1:8848
   protocol:
     name: dubbo
     port: -1
