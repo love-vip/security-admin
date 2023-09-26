@@ -1,0 +1,150 @@
+CREATE TABLE `rbac_mapper_column` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mapper_id` varchar(128) NOT NULL COMMENT 'sql映射id',
+  `actual_column` varchar(255) NOT NULL COMMENT '列(真实值)',
+  `display_column` varchar(255) NOT NULL COMMENT '列(显示值)',
+  `checked` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否选中(0:否｜1:是)',
+  `multi` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否包含多列(0:否｜1:是)',
+  `mapping` varchar(255) DEFAULT NULL COMMENT '映射列',
+  `filter` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否参与行过滤(0：否｜1:是)',
+  `mask` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否遮罩脱敏(0：否｜1:是)',
+  `type` varchar(32) DEFAULT NULL COMMENT '字段类型',
+  `creator` varchar(255) NOT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_mapper_key` (`mapper_id`,`actual_column`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='菜单显示列集合表';
+
+CREATE TABLE `rbac_mapper_search` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mapper_id` varchar(512) NOT NULL COMMENT 'sql映射id',
+  `actual_box` varchar(255) NOT NULL COMMENT '查询表单(真实值)',
+  `display_box` varchar(255) NOT NULL COMMENT '查询表单(显示值)',
+  `checked` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否选中(0:否｜1:是)',
+  `mapping` varchar(255) DEFAULT NULL COMMENT '映射值',
+  `multi` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否映射多个',
+  `creator` varchar(255) NOT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_mapper_key` (`mapper_id`,`actual_box`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='菜单显示搜索框集合表';
+
+CREATE TABLE `rbac_mapping_mapper` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `mapper_id` varchar(512) NOT NULL COMMENT 'sql映射id',
+  `mapper_ids` longtext NOT NULL COMMENT 'sql映射id集合',
+  `aop` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否aop处理(0:否|1:是)',
+  `camel` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否属性驼峰写法(0:否|1:是)',
+  `creator` varchar(255) NOT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='映射集合表';
+
+CREATE TABLE `rbac_mapping_user_authority` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `authority_id` bigint(20) NOT NULL COMMENT '资源id',
+  `creator` varchar(255) DEFAULT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `idx-userid-authorityid` (`user_id`,`authority_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-资源关联表';
+
+CREATE TABLE `rbac_mapping_user_column` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `mapper_id` varchar(512) NOT NULL COMMENT 'sql映射id',
+  `columns` longtext NOT NULL COMMENT '列集合',
+  `searches` longtext NOT NULL COMMENT '查询集合',
+  `masks` longtext COMMENT '遮罩字段集合',
+  `conditions` longtext COMMENT '行过滤字段集合',
+  `creator` varchar(255) NOT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_user_mapper` (`user_id`,`mapper_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-列映射表';
+
+CREATE TABLE `rbac_mapping_user_column_factor` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `mapper_id` varchar(255) NOT NULL COMMENT '查询语句id',
+  `actual_column` varchar(32) DEFAULT NULL COMMENT '列名',
+  `factor` varchar(255) NOT NULL COMMENT '条件因素',
+  `prefix_value` varchar(255) DEFAULT NULL COMMENT '条件值1',
+  `suffix_value` varchar(255) DEFAULT NULL COMMENT '条件值2',
+  `creator` varchar(255) NOT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_user_mapper` (`user_id`,`mapper_id`,`actual_column`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-SQL-行过滤条件映射表';
+
+CREATE TABLE `rbac_mapping_user_column_rule` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `mapper_id` varchar(255) NOT NULL,
+  `actual_column` varchar(255) NOT NULL COMMENT '列(加密列)',
+  `type` int(11) NOT NULL COMMENT '类型: 1-全加密、2-隐藏前置&后置、3-显示前置&后置、4-隐藏@前的（第一位除外）',
+  `prefix_num` int(11) DEFAULT '0' COMMENT '前置位数',
+  `suffix_num` int(11) DEFAULT '0' COMMENT '后置位数',
+  `creator` varchar(255) NOT NULL COMMENT '创建人',
+  `creator_id` bigint(20) NOT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_user_mapper` (`user_id`,`mapper_id`,`actual_column`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-SQL-列脱敏条件映射表';
+
+CREATE TABLE `rbac_mapping_user_condition` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `mapper_id` varchar(255) NOT NULL COMMENT '查询语句id',
+  `condition_` longtext NOT NULL COMMENT '过滤条件',
+  `creator` varchar(255) NOT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_user_mapper` (`user_id`,`mapper_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-过滤条件映射表';
+
+CREATE TABLE `rbac_mapping_user_permission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `perm_id` bigint(20) NOT NULL COMMENT '权限id',
+  `creator` varchar(255) DEFAULT NULL COMMENT '创建人',
+  `creator_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `last_operator` varchar(255) DEFAULT NULL COMMENT '最近操作人',
+  `last_operator_id` bigint(20) DEFAULT NULL COMMENT '最近操作人id',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `idx-userid-permid` (`user_id`,`perm_id`) USING HASH
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-权限关联表';
