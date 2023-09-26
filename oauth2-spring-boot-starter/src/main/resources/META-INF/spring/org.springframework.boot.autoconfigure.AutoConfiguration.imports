@@ -1,1 +1,3 @@
+com.vip.admin.oauth2.resource.autoconfigure.MybatisPlusConfiguration
+com.vip.admin.oauth2.resource.autoconfigure.AuthorityAutoConfiguration
 com.vip.admin.oauth2.resource.autoconfigure.Oauth2ResourceAutoConfiguration

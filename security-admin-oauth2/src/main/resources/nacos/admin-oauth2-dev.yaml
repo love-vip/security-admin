@@ -88,10 +88,12 @@ dubbo:
     name: dubbo
     port: -1
     serialization: kryo
-  cloud:
-    subscribed-services: admin-config
   scan:
     basePackages: com.vip.admin.oauth2.web.rpc
+  provider:
+    group: admin-service
+    version: 1.0.0
+    check: false
 
 logging:
   config: classpath:logback-spring.xml

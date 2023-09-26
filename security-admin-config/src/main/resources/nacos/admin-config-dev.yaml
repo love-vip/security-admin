@@ -117,6 +117,8 @@ management:
 dubbo:
   application:
     name: ${spring.application.name}
+    qos-enable: true
+    qos-port: 2023
   registry:
     address: nacos://127.0.0.1:8848
   protocol:
@@ -124,9 +126,14 @@ dubbo:
     port: -1
     serialization: kryo
   cloud:
-    subscribed-services: admin-oauth
+    subscribed-services: admin-oauth2
   scan:
     basePackages: com.vip.admin.config.web.rpc
+  consumer:
+    group: admin-service
+    version: 1.0.0
+    check: false
+    timeout: 3000
 
 logging:
   config: classpath:logback-spring.xml
