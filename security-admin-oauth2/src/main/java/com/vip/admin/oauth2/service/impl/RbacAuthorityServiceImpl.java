@@ -6,6 +6,7 @@ import com.vip.admin.commons.core.support.BaseService;
 import com.vip.admin.commons.core.utils.JacksonUtil;
 import com.vip.admin.oauth2.mapper.RbacAuthorityMapper;
 import com.vip.admin.oauth2.model.domain.RbacAuthority;
+import com.vip.admin.oauth2.request.AuthorityRequest;
 import com.vip.admin.oauth2.service.RbacAuthorityService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -62,13 +63,15 @@ public class RbacAuthorityServiceImpl extends BaseService<RbacAuthority> impleme
         });
     }
 
+    @Override
+    public void notifyRefreshAuthority(List<AuthorityRequest> authorityList) {
+
+    }
+
     @Data
     public static class Swagger {
-
         private List<Tag> tags;
-
         private Map<String, Map<String, Method>> paths;
-
         @Data
         public static class Tag {
             private String name;
@@ -77,7 +80,6 @@ public class RbacAuthorityServiceImpl extends BaseService<RbacAuthority> impleme
 
         @Data
         public static class Method {
-
             private List<String> tags;
             private String summary;
             private String description;

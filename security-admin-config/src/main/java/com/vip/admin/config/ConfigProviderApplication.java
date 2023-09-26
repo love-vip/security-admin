@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @title: ConfigProviderApplication
  * @date 2023/3/18 13:43
  */
+@EnableDubbo
 @EnableDiscoveryClient
 @SpringBootApplication
 @MapperScan(basePackages = "com.vip.admin.config.mapper")

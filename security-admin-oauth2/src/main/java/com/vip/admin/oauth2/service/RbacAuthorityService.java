@@ -2,6 +2,7 @@ package com.vip.admin.oauth2.service;
 
 import com.vip.admin.commons.core.support.IService;
 import com.vip.admin.oauth2.model.domain.RbacAuthority;
+import com.vip.admin.oauth2.request.AuthorityRequest;
 import org.springframework.cloud.client.ServiceInstance;
 
 import java.util.List;
@@ -24,4 +25,10 @@ public interface RbacAuthorityService extends IService<RbacAuthority> {
      * @param serviceInstance 来源系统
      */
     void notifyRefreshAuthority(ServiceInstance serviceInstance);
+
+    /**
+     * 通知刷新最新资源路径
+     * @param authorityList 来源数据
+     */
+    void notifyRefreshAuthority(List<AuthorityRequest> authorityList);
 }
